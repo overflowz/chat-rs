@@ -117,7 +117,7 @@ async fn client_connected(token: String, ws: WebSocket, clients: Clients) {
         }
     });
 
-    // keep loop busy until socket is connected
+    // keep loop busy while socket is connected
     while ws_rx.next().await.is_some() {}
 
     // disconnected, clean up
@@ -210,7 +210,7 @@ async fn handle_list_clients(clients: Clients) -> Result<impl Reply, warp::Rejec
     Ok(warp::reply::json(&clients))
 }
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() {
     let clients: Clients = Arc::new(Mutex::new(HashMap::<String, Client>::new()));
     let clients = warp::any().map(move || clients.clone());
